@@ -1,26 +1,48 @@
+import { useContext } from "react";
 import Modal from "../Ui/Modal";
 import styles from "./Cart.module.css";
-// import CartItem from "./CartItem";
+import CartItem from "./CartItem";
+import CartContext from "../../store/cart-context";
 
-function Cart() {
+function Cart({ onshowCartHandler }) {
+  const { items, totalAmount, removeItem, addItem } = useContext(CartContext);
+  const hasItem = items.length > 0;
+  const aggregateAmount = totalAmount.toFixed(2);
+  // console.log(items);
+
+  const cartItemRemoveHandler = (id) => {
+    removeItem(id);
+  };
+  const cartItemAddHandler = (item) => {
+    addItem({ ...item, amount: 1 });
+  };
   const cartItems = (
     <ul className={styles["cart-items"]}>
-      {[{ id: "c1", name: "Shushi", amount: 2, price: 12.99 }].map((item) => (
-        <li key={item.key}>{item.name}</li>
+      {items.map((item) => (
+        <CartItem
+          key={item.id}
+          item={item}
+          onRemove={cartItemRemoveHandler.bind(null, item.id)}
+          onAdd={cartItemAddHandler.bind(null, item)}
+        >
+          {item.name}
+        </CartItem>
       ))}
     </ul>
   );
 
   return (
-    <Modal>
+    <Modal onCloseCart={onshowCartHandler}>
       {cartItems}
       <div className={styles.total}>
         <span>Total Amount</span>
-        <span>35.62</span>
+        <span>{hasItem ? aggregateAmount : 0}</span>
       </div>
       <div className={styles.actions}>
-        <button className={styles["button--alt"]}>Close</button>
-        <button className={styles.button}>Order</button>
+        <button className={styles["button--alt"]} onClick={onshowCartHandler}>
+          Close
+        </button>
+        {hasItem && <button className={styles.button}>Order</button>}
       </div>
     </Modal>
   );

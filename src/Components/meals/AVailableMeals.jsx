@@ -29,7 +29,7 @@ const DUMMY_MEALS = [
 ];
 
 function AVailableMeals() {
-  console.log(DUMMY_MEALS);
+  // console.log(DUMMY_MEALS);
   const mealLists = DUMMY_MEALS.map((meal) => (
     <MealItem meal={meal} key={meal.id} />
   ));
