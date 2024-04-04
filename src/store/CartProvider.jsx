@@ -4,16 +4,6 @@ import CartContext from "./cart-context";
 // const cartReducer = (lastStateSnapShot, action) => {};
 const initialState = { items: [], totalAmount: 0 };
 const cartReducer = (state, action) => {
-  //   switch (action.type) {
-  //     case "ADD":
-  //       return {
-  //         items: state.items.concat(action.item),
-  //         totalAmount: state.totalAmount + action.item.amount * action.item.price,
-  //       };
-  //     case "REMOVE":
-  //       return {};
-  //   }
-
   if (action.type === "ADD") {
     const updateTotalAmount =
       state.totalAmount + action.item.price * action.item.amount;
@@ -64,6 +54,10 @@ const cartReducer = (state, action) => {
       totalAmount: updateTotalAmount,
     };
   }
+  if (action.type === "CLEAR") {
+    return initialState;
+  }
+
   return initialState;
 };
 function CartProvider({ children }) {
@@ -79,11 +73,15 @@ function CartProvider({ children }) {
   const removeItemFromCartHandler = (id) => {
     dispatch({ type: "REMOVE", id });
   };
+  const clearFormCartHandler = () => {
+    dispatch({ type: "CLEAR" });
+  };
   const cartContextValues = {
     items,
     totalAmount,
     addItem: addItemToCartHandler,
     removeItem: removeItemFromCartHandler,
+    clearForm: clearFormCartHandler,
   };
   return (
     <CartContext.Provider value={cartContextValues}>
